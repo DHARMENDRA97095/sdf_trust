@@ -43,6 +43,7 @@ export default function VolunteerForm() {
       } else {
         setStatus({ type: "error", message: data.message || "Failed to submit application." });
       }
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       setStatus({ type: "error", message: "Network error. Please try again later." });
     } finally {
@@ -127,6 +128,7 @@ export default function VolunteerForm() {
               />
             </div>
 
+
             <div>
               <label className="block mb-1 font-medium">Area of Interest</label>
               <select
@@ -146,16 +148,33 @@ export default function VolunteerForm() {
           </div>
 
           {/* Address */}
-          <div>
+          <div className="grid md:grid-cols-2 gap-4">
+          <div className="max-w-5xl"> 
             <label className="block mb-1 font-medium">Full Address</label>
-            <textarea
+            <input
               name="address"
               placeholder="Enter your complete address"
               value={formData.address}
               onChange={handleChange}
-              className="input h-20 resize-none"
+              className="input"
               required
-            ></textarea>
+            ></input>
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Pincode</label>
+              <input
+                type="pincode"
+                name="age"
+                placeholder="Enter Pincode"
+                value={formData.age}
+                onChange={handleChange}
+                className="input"
+                required
+              />
+            </div>
+
+
           </div>
 
           {/* Message */}

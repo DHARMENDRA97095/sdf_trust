@@ -15,6 +15,10 @@ try {
     $contactsCount = $pdo->query("SELECT count(*) FROM contacts")->fetchColumn();
     $unreadContacts = $pdo->query("SELECT count(*) FROM contacts WHERE status = 'new'")->fetchColumn();
     $projectsCount = $pdo->query("SELECT count(*) FROM projects")->fetchColumn();
+    $donationCount = $pdo->query("SELECT count(*) FROM donations")->fetchColumn();
+    $programCount = $pdo->query("SELECT count(*) FROM programs")->fetchColumn();
+    
+
     
     // Fetch 5 most recent contacts
     $recentContacts = $pdo->query("SELECT name, email, subject, status, created_at FROM contacts ORDER BY created_at DESC LIMIT 5")->fetchAll();
@@ -74,6 +78,9 @@ try {
             <a href="videos.php" class="flex items-center gap-3 px-6 py-3 text-gray-300 hover:bg-[#2c4029] hover:text-white transition-colors">
                 <span>🎥</span> Video Gallery
             </a>
+            <a href="donations.php" class="flex items-center gap-3 px-6 py-3 text-gray-300 hover:bg-[#2c4029] hover:text-white transition-colors">
+                <span>🎥</span> Donation
+            </a>
         </nav>
         <div class="p-4 border-t border-gray-700">
             <div class="flex items-center justify-between text-sm">
@@ -127,6 +134,20 @@ try {
                     <div>
                         <p class="text-sm text-gray-500 font-bold uppercase tracking-wider">Projects</p>
                         <h3 class="text-3xl font-bold text-gray-800"><?php echo $projectsCount; ?></h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-green-50 text-green-500 flex items-center justify-center text-2xl">🏢</div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-bold uppercase tracking-wider">Donations</p>
+                        <h3 class="text-3xl font-bold text-gray-800"><?php echo $donationCount; ?></h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-green-50 text-green-500 flex items-center justify-center text-2xl">🏢</div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-bold uppercase tracking-wider">Programs</p>
+                        <h3 class="text-3xl font-bold text-gray-800"><?php echo $programCount; ?></h3>
                     </div>
                 </div>
             </div>

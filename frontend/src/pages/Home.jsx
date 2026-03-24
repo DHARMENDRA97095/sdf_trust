@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Herosection from "./HeroSection";
+import Herosection from "../components/Herosection";
 import Testimonials from "./Testimonials";
 
 const PROGRAMS_API_URL = "http://localhost/backend/api/programs.php";

@@ -50,7 +50,7 @@ function Herosection() {
             "No project description available.",
           date: project.date || project.created_at || "",
           img: makeImageUrl(project.image || project.image_url),
-          link: project.link || `/projects/${project.slug || project.id || index + 1}`,
+          link: project.link || `/projectdetails/${project.slug || project.id || index + 1}`,
         }));
 
         setProjects(normalizedProjects);
