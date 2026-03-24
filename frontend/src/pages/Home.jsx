@@ -4,9 +4,6 @@ import Herosection from "../components/Herosection";
 import Testimonials from "./Testimonials";
 import { apiUrl, makeImageUrl } from "../config";
 
-const PROGRAMS_API_URL = apiUrl("programs.php");
-const SUBSCRIBE_API_URL = apiUrl("subscribe.php");
-
 const createSlug = (text) => {
   if (!text) return "";
   return text
@@ -31,7 +28,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPrograms = async () => {
       try {
-        const response = await fetch(PROGRAMS_API_URL);
+        const response = await fetch(apiUrl("programs.php"));
 
         if (!response.ok) {
           throw new Error("Failed to fetch programs");
@@ -77,7 +74,7 @@ const Home = () => {
     setMessage({ text: "", type: "" });
 
     try {
-      const response = await fetch(SUBSCRIBE_API_URL, {
+      const response = await fetch(apiUrl("subscribe.php"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

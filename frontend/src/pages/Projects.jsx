@@ -1,4 +1,4 @@
-import { API_BASE_URL, makeImageUrl } from "../config";
+import { apiUrl, makeImageUrl } from "../config";
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -9,8 +9,6 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-export const PROJECTS_API = `${API_BASE_URL}/projects.php`;
-
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +17,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch(`${PROJECTS_API}`);
+        const response = await fetch(apiUrl("projects.php"));
         const data = await response.json();
 
         if (data.status === "success") {
