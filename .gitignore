@@ -12,6 +12,7 @@ frontend/.env.production.local
 backend/vendor/
 backend/.env
 backend/.env.local
+backend/api/config.local.php
 
 # ---------- Logs ----------
 *.log

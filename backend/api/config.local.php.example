@@ -1,0 +1,10 @@
+<?php
+/**
+ * Local database overrides (XAMPP / WAMP).
+ * Copy this file to config.local.php and adjust.
+ * config.local.php is gitignored — do not commit real passwords.
+ */
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'sdf_database');
