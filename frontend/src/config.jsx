@@ -19,9 +19,17 @@ let resolved =
   import.meta.env.VITE_API_BASE_URL ||
   (import.meta.env.PROD ? DEFAULT_API_BASE_URL_PROD : DEFAULT_API_BASE_URL_DEV);
 
-// Production builds (e.g. Vercel): never use localhost for API — env is sometimes mis-set to local URLs.
+// Build-time guard: production bundle should not keep a localhost API URL from a bad .env.
 if (import.meta.env.PROD && isLocalApiUrl(String(resolved))) {
   resolved = DEFAULT_API_BASE_URL_PROD;
+}
+
+// Runtime guard: Vercel (or any live host) must use the remote API even if VITE_* was baked in as localhost.
+if (typeof window !== "undefined") {
+  const host = window.location.hostname;
+  if (host && host !== "localhost" && host !== "127.0.0.1") {
+    resolved = DEFAULT_API_BASE_URL_PROD;
+  }
 }
 
 export const API_BASE_URL = normalizeApiBaseUrl(resolved);
