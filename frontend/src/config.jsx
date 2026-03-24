@@ -15,9 +15,14 @@ function normalizeApiBaseUrl(url) {
   return base;
 }
 
-const resolved =
+let resolved =
   import.meta.env.VITE_API_BASE_URL ||
   (import.meta.env.PROD ? DEFAULT_API_BASE_URL_PROD : DEFAULT_API_BASE_URL_DEV);
+
+// Production builds (e.g. Vercel): never use localhost for API — env is sometimes mis-set to local URLs.
+if (import.meta.env.PROD && isLocalApiUrl(String(resolved))) {
+  resolved = DEFAULT_API_BASE_URL_PROD;
+}
 
 export const API_BASE_URL = normalizeApiBaseUrl(resolved);
 

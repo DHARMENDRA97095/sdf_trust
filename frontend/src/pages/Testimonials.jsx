@@ -68,7 +68,7 @@
 
 
 import { useEffect, useRef, useState } from "react";
-import { apiUrl } from "../config";
+import { apiUrl, makeImageUrl } from "../config";
 
 function Testimonials() { // Removed props, we fetch inside now
   const [testimonials, setTestimonials] = useState([]);
@@ -110,7 +110,7 @@ function Testimonials() { // Removed props, we fetch inside now
           {testimonials.map((item, index) => (
             <div key={index} className="min-w-75 bg-gray-100 p-6 rounded-2xl flex gap-4 text-left">
               <img 
-                src={item.image || 'https://via.placeholder.com/150'} 
+                src={makeImageUrl(item.image, 'https://via.placeholder.com/150')} 
                 className="w-16 h-16 rounded-full object-cover shrink-0" 
               />
               <div>
