@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { apiUrl } from "../config";
+import { apiFetch } from "../config";
 
 export default function VolunteerForm() {
   const [formData, setFormData] = useState({
@@ -28,7 +28,7 @@ export default function VolunteerForm() {
     setStatus({ type: '', message: '' });
 
     try {
-      const response = await fetch(apiUrl("volunteer.php"), {
+      const response = await apiFetch("volunteer.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

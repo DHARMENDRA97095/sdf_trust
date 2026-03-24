@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { apiUrl } from "../config";
+import { apiFetch } from "../config";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ const Contact = () => {
     setStatusMessage({ text: '', type: '' });
 
     try {
-      const response = await fetch(apiUrl("contact.php"), {
+      const response = await apiFetch("contact.php", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

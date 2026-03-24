@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { apiUrl, makeImageUrl } from "../config";
+import { apiFetch, makeImageUrl } from "../config";
 
 const ProgramDetails = () => {
   const { slug } = useParams();
@@ -17,7 +17,7 @@ const ProgramDetails = () => {
   useEffect(() => {
     const fetchProgram = async () => {
       try {
-        const response = await fetch(apiUrl("programs.php"));
+        const response = await apiFetch("programs.php");
 
         if (!response.ok) {
           throw new Error("Failed to fetch program details");

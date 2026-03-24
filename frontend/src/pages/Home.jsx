@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Herosection from "../components/Herosection";
 import Testimonials from "./Testimonials";
-import { apiUrl, makeImageUrl } from "../config";
+import { apiFetch, makeImageUrl } from "../config";
 
 const createSlug = (text) => {
   if (!text) return "";
@@ -28,7 +28,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPrograms = async () => {
       try {
-        const response = await fetch(apiUrl("programs.php"));
+        const response = await apiFetch("programs.php");
 
         if (!response.ok) {
           throw new Error("Failed to fetch programs");
@@ -74,7 +74,7 @@ const Home = () => {
     setMessage({ text: "", type: "" });
 
     try {
-      const response = await fetch(apiUrl("subscribe.php"), {
+      const response = await apiFetch("subscribe.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -97,7 +97,7 @@ const Home = () => {
     } catch (error) {
       console.error("Subscription error:", error);
       setMessage({
-        text: "Failed to connect to the server. Please ensure the PHP backend is running on localhost.",
+        text: "Failed to connect to the server. Please try again later.",
         type: "error",
       });
     } finally {

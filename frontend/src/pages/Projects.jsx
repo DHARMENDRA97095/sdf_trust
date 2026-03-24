@@ -1,4 +1,4 @@
-import { apiUrl, makeImageUrl } from "../config";
+import { apiFetch, makeImageUrl } from "../config";
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -17,7 +17,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch(apiUrl("projects.php"));
+        const response = await apiFetch("projects.php");
         const data = await response.json();
 
         if (data.status === "success") {

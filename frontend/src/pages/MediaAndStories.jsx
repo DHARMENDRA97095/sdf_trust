@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import { apiUrl, makeImageUrl } from "../config";
+import { apiFetch, makeImageUrl } from "../config";
 
 const MediaAndStories = () => {
   const [activeTab, setActiveTab] = useState('photos');
@@ -40,7 +40,7 @@ const MediaAndStories = () => {
   useEffect(() => {
     const fetchMedia = async () => {
       try {
-        const response = await fetch(apiUrl("media.php"));
+        const response = await apiFetch("media.php");
         const data = await response.json();
         
         if (data.status === 'success') {
@@ -63,7 +63,7 @@ const MediaAndStories = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch(apiUrl("videos.php"));
+        const response = await apiFetch("videos.php");
         const data = await response.json();
         
         if (data.status === 'success') {

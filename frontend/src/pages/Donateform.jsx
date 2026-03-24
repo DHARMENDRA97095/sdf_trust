@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
-import { apiUrl } from "../config";
+import { apiFetch } from "../config";
 
 export default function DonationForm() {
   const initialFormData = {
@@ -36,10 +36,6 @@ export default function DonationForm() {
   const upiId = "9709544166@ybl";
   const payeeName = "SDF Trust";
   const transactionNote = "Donation for children support";
-
-  const CREATE_DONATION_API = apiUrl("create-donation.php");
-  const CHECK_STATUS_API = apiUrl("check-payment-status.php");
-  const EXPIRE_PAYMENT_API = apiUrl("expire-payment.php");
 
   const createUpiUrl = ({ upiId, payeeName, amount, note, transactionId }) => {
     const params = new URLSearchParams({
@@ -123,7 +119,7 @@ export default function DonationForm() {
 
   const markExpired = async (txnId) => {
     try {
-      await fetch(EXPIRE_PAYMENT_API, {
+      await apiFetch("expire-payment.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,8 +137,8 @@ export default function DonationForm() {
     try {
       setIsCheckingStatus(true);
 
-      const res = await fetch(
-        `${CHECK_STATUS_API}?transaction_id=${encodeURIComponent(txnId)}`
+      const res = await apiFetch(
+        `check-payment-status.php?transaction_id=${encodeURIComponent(txnId)}`,
       );
       const data = await res.json();
 
@@ -226,7 +222,7 @@ export default function DonationForm() {
     try {
       setIsCreatingDonation(true);
 
-      const res = await fetch(CREATE_DONATION_API, {
+      const res = await apiFetch("create-donation.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

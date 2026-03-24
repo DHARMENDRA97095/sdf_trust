@@ -1,4 +1,9 @@
-// Dev: local PHP (XAMPP). Prod: hosted API — HTTPS required on https://sdftrust.vercel.app (mixed content).
+/**
+ * API base URL resolution for Vite + PHP backend.
+ * - Local dev: http://localhost/... (XAMPP)
+ * - Deployed (Vercel, etc.): always https://hrntechsolutions.com/backend/api
+ * Vite bakes VITE_API_BASE_URL at build time; we override via hostname when not on localhost.
+ */
 const DEFAULT_API_BASE_URL_DEV = "http://localhost/sdftrust/backend/api";
 const DEFAULT_API_BASE_URL_PROD = "https://hrntechsolutions.com/backend/api";
 
@@ -6,10 +11,6 @@ function isLocalApiUrl(url) {
   return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\b/i.test(url);
 }
 
-/**
- * Non-localhost http:// → https:// (mixed content).
- * Env / CI often sets VITE_API_BASE_URL=http://hrntechsolutions.com/... — force that host to https explicitly.
- */
 function normalizeApiBaseUrl(url) {
   let base = String(url).trim().replace(/\/+$/, "");
   base = base.replace(/^http:\/\/www\.hrntechsolutions\.com/i, "https://www.hrntechsolutions.com");
@@ -20,11 +21,6 @@ function normalizeApiBaseUrl(url) {
   return base;
 }
 
-/**
- * Resolve on every call. Vite bakes VITE_API_BASE_URL into the bundle; if that value is
- * localhost (wrong env on CI), it must not win when the app runs on Vercel — so we check
- * the browser hostname first.
- */
 function getResolvedBaseUrl() {
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
@@ -52,15 +48,25 @@ export function getAdminBaseUrl() {
   return getResolvedBaseUrl().replace(/\/api$/, "/admin");
 }
 
+/** Full URL to a PHP file under /backend/api/ (e.g. "projects.php" or "x.php?a=1"). */
 export function apiUrl(endpoint = "") {
   const base = getResolvedBaseUrl().replace(/\/+$/, "");
-  const full = `${base}/${String(endpoint).replace(/^\/+/, "")}`;
+  const path = String(endpoint).replace(/^\/+/, "");
+  const full = `${base}/${path}`;
   return normalizeApiBaseUrl(full);
 }
 
 export function adminUrl(path = "") {
   const adminBase = getAdminBaseUrl().replace(/\/+$/, "");
-  return `${adminBase}/${String(path).replace(/^\/+/, "")}`;
+  const rest = String(path).replace(/^\/+/, "");
+  return normalizeApiBaseUrl(`${adminBase}/${rest}`);
+}
+
+/**
+ * Use this for all PHP API calls so URLs always go through the same resolution + HTTPS rules.
+ */
+export function apiFetch(endpoint, init) {
+  return fetch(apiUrl(endpoint), init);
 }
 
 export function makeImageUrl(

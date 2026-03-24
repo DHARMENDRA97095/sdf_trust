@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { apiUrl, makeImageUrl } from "../config";
+import { apiFetch, makeImageUrl } from "../config";
 
 const Publications = () => {
   const location = useLocation();
@@ -22,7 +22,7 @@ const Publications = () => {
   useEffect(() => {
     const fetchPublications = async () => {
       try {
-        const response = await fetch(apiUrl("publications.php"));
+        const response = await apiFetch("publications.php");
         if (!response.ok) {
           throw new Error("Failed to fetch publications");
         }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { apiUrl, makeImageUrl } from "../config";
+import { apiFetch, makeImageUrl } from "../config";
 
 function Herosection() {
   const [projects, setProjects] = useState([]);
@@ -11,7 +11,7 @@ function Herosection() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch(apiUrl("projects.php"));
+        const response = await apiFetch("projects.php");
 
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
