@@ -1,22 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { apiUrl, makeImageUrl } from "../config";
 
-const API_URL = "http://localhost/sdftrust/backend/api/projects.php";
-const ADMIN_BASE_URL = "http://localhost/sdftrust/backend/admin/";
-
-const makeImageUrl = (path) => {
-  if (!path) return "https://via.placeholder.com/600x300?text=No+Image";
-
-  if (typeof path !== "string") {
-    return "https://via.placeholder.com/600x300?text=No+Image";
-  }
-
-  if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
-  }
-
-  return `${ADMIN_BASE_URL}${path.replace(/^\/+/, "")}`;
-};
+const API_URL = apiUrl("projects.php");
 
 function Herosection() {
   const [projects, setProjects] = useState([]);

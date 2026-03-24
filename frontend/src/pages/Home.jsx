@@ -2,24 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Herosection from "../components/Herosection";
 import Testimonials from "./Testimonials";
+import { apiUrl, makeImageUrl } from "../config";
 
-const PROGRAMS_API_URL = "http://localhost/sdftrust/backend/api/programs.php";
-const SUBSCRIBE_API_URL = "http://localhost/sdftrust/backend/api/subscribe.php";
-const ADMIN_BASE_URL = "http://localhost/sdftrust/backend/admin/";
-
-const makeImageUrl = (path) => {
-  if (!path) return "https://via.placeholder.com/800x500?text=No+Image";
-
-  if (typeof path !== "string") {
-    return "https://via.placeholder.com/800x500?text=No+Image";
-  }
-
-  if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
-  }
-
-  return `${ADMIN_BASE_URL}${path.replace(/^\/+/, "")}`;
-};
+const PROGRAMS_API_URL = apiUrl("programs.php");
+const SUBSCRIBE_API_URL = apiUrl("subscribe.php");
 
 const createSlug = (text) => {
   if (!text) return "";

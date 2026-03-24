@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
+import { apiUrl, makeImageUrl } from "../config";
 
 const Programs = () => {
   const location = useLocation();
@@ -21,7 +22,7 @@ const Programs = () => {
   useEffect(() => {
     const fetchPrograms = async () => {
       try {
-        const response = await fetch("http://localhost/sdftrust/backend/api/programs.php");
+        const response = await fetch(apiUrl("programs.php"));
 
         if (!response.ok) {
           throw new Error("Failed to fetch programs");
@@ -30,7 +31,15 @@ const Programs = () => {
         const data = await response.json();
 
         if (data.status === "success") {
-          setProgramsList(data.data);
+          setProgramsList(
+            data.data.map((program) => ({
+              ...program,
+              image_url: makeImageUrl(
+                program.image_url,
+                "https://via.placeholder.com/800x500?text=No+Image",
+              ),
+            })),
+          );
         } else {
           throw new Error(data.message || "Error fetching programs");
         }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
+import { apiUrl, makeImageUrl } from "../config";
 
 const MediaAndStories = () => {
   const [activeTab, setActiveTab] = useState('photos');
@@ -39,7 +40,7 @@ const MediaAndStories = () => {
   useEffect(() => {
     const fetchMedia = async () => {
       try {
-        const response = await fetch('http://localhost/sdftrust/backend/api/media.php');
+        const response = await fetch(apiUrl("media.php"));
         const data = await response.json();
         
         if (data.status === 'success') {
@@ -62,7 +63,7 @@ const MediaAndStories = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch('http://localhost/sdftrust/backend/api/videos.php');
+        const response = await fetch(apiUrl("videos.php"));
         const data = await response.json();
         
         if (data.status === 'success') {
@@ -185,7 +186,7 @@ const MediaAndStories = () => {
                 medias.map((media) => (
                   <div key={media.id} className="aspect-square bg-gray-200 rounded-xl overflow-hidden relative group cursor-pointer">
                     <div className="absolute inset-0 bg-linear-to-br from-gray-300 to-gray-200 flex items-center justify-center text-gray-400 group-hover:scale-110 transition-transform duration-500">
-                      <img src={`http://localhost/sdftrust/backend/admin/${media.image_url}`} alt={media.title} className='w-full h-full object-cover' />
+                      <img src={makeImageUrl(media.image_url)} alt={media.title} className='w-full h-full object-cover' />
                     </div>
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                       <span className="text-white font-bold bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm">View</span>
@@ -241,7 +242,7 @@ const MediaAndStories = () => {
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
                           <img 
-                            src={`http://localhost/sdftrust/backend/admin/${video.image_url}`} 
+                            src={makeImageUrl(video.image_url)} 
                             alt={video.title} 
                             className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity duration-300" 
                           />

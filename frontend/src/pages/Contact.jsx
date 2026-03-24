@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { apiUrl } from "../config";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -21,8 +22,7 @@ const Contact = () => {
     setStatusMessage({ text: '', type: '' });
 
     try {
-      // In production, point to actual PHP server
-      const response = await fetch('http://localhost/sdftrust/backend/api/contact.php', {
+      const response = await fetch(apiUrl("contact.php"), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,19 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-
-const BASE_URL = "http://localhost/sdftrust/backend/admin/";
-
-const makeImageUrl = (path) => {
-  if (!path) {
-    return "https://via.placeholder.com/1200x800?text=No+Image";
-  }
-
-  if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
-  }
-
-  return `${BASE_URL}${path.replace(/^\/+/, "")}`;
-};
+import { apiUrl, makeImageUrl } from "../config";
 
 const ProgramDetails = () => {
   const { slug } = useParams();
@@ -30,9 +17,7 @@ const ProgramDetails = () => {
   useEffect(() => {
     const fetchProgram = async () => {
       try {
-        const response = await fetch(
-          "http://localhost/sdftrust/backend/api/programs.php",
-        );
+        const response = await fetch(apiUrl("programs.php"));
 
         if (!response.ok) {
           throw new Error("Failed to fetch program details");
@@ -57,10 +42,15 @@ const ProgramDetails = () => {
           foundProgram.images.length > 0
         ) {
           normalizedImages = foundProgram.images.map((img) =>
-            makeImageUrl(img),
+            makeImageUrl(img, "https://via.placeholder.com/1200x800?text=No+Image"),
           );
         } else if (foundProgram.image_url) {
-          normalizedImages = [makeImageUrl(foundProgram.image_url)];
+          normalizedImages = [
+            makeImageUrl(
+              foundProgram.image_url,
+              "https://via.placeholder.com/1200x800?text=No+Image",
+            ),
+          ];
         } else {
           normalizedImages = [
             "https://via.placeholder.com/1200x800?text=No+Image",

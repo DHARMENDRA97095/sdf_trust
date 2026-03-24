@@ -1,28 +1,30 @@
-import { API_BASE_URL } from "../config";
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig, loadEnv } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
-// vite.config.js
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const apiBaseUrl = (
+    env.VITE_API_BASE_URL || "http://localhost/sdftrust/backend/api"
+  ).replace(/\/+$/, "");
+  const adminBaseUrl = apiBaseUrl.replace(/\/api$/, "/admin");
 
-export const PROJECTS_API = `${API_BASE_URL}`;
-
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  server: {
-    proxy: {
-      '/admin': {
-        target: `${API_BASE_URL}/backend/admin`,
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/admin/, ''),
-      },
-      // ADD THIS so images show up in your React frontend
-      '/uploads': {
-        target: `${API_BASE_URL}/admin/uploads`,
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/uploads/, ''),
+  return {
+    plugins: [react(), tailwindcss()],
+    server: {
+      proxy: {
+        "/admin": {
+          target: adminBaseUrl,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/admin/, ""),
+        },
+        "/uploads": {
+          target: `${adminBaseUrl}/uploads`,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/uploads/, ""),
+        },
       },
     },
-  },
-})
+  };
+});

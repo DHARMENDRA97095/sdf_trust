@@ -1,19 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-
-const BASE_URL = "http://localhost/sdftrust/backend/admin/";
-
-const makeImageUrl = (path) => {
-  if (!path) {
-    return "https://via.placeholder.com/1200x800?text=No+Image";
-  }
-
-  if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
-  }
-
-  return `${BASE_URL}${path.replace(/^\/+/, "")}`;
-};
+import { apiUrl, makeImageUrl } from "../config";
 
 const ProjectDetails = () => {
   const { slug } = useParams();
@@ -29,9 +16,7 @@ const ProjectDetails = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await fetch(
-          "http://localhost/sdftrust/backend/api/projects.php"
-        );
+        const response = await fetch(apiUrl("projects.php"));
 
         if (!response.ok) {
           throw new Error("Failed to fetch project details");
@@ -49,7 +34,10 @@ const ProjectDetails = () => {
           throw new Error("Project not found");
         }
 
-        const imageUrl = makeImageUrl(foundProject.image_url);
+        const imageUrl = makeImageUrl(
+          foundProject.image_url,
+          "https://via.placeholder.com/1200x800?text=No+Image",
+        );
 
         setProject({
           ...foundProject,

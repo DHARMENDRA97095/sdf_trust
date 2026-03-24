@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { apiUrl, makeImageUrl } from "../config";
 
 const Publications = () => {
   const location = useLocation();
@@ -21,13 +22,18 @@ const Publications = () => {
   useEffect(() => {
     const fetchPublications = async () => {
       try {
-        const response = await fetch("http://localhost/sdftrust/backend/api/publications.php");
+        const response = await fetch(apiUrl("publications.php"));
         if (!response.ok) {
           throw new Error("Failed to fetch publications");
         }
         const data = await response.json();
         if (data.status === "success") {
-          setPublications(data.data);
+          setPublications(
+            data.data.map((item) => ({
+              ...item,
+              image_url: makeImageUrl(item.image_url),
+            })),
+          );
         } else {
           throw new Error(data.message || "Error fetching publications");
         }

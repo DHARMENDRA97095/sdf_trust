@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../config";
+import { API_BASE_URL, makeImageUrl } from "../config";
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -23,7 +23,15 @@ const Projects = () => {
         const data = await response.json();
 
         if (data.status === "success") {
-          setProjects(data.data);
+          setProjects(
+            data.data.map((project) => ({
+              ...project,
+              image_url: makeImageUrl(
+                project.image_url,
+                "https://via.placeholder.com/800x500?text=No+Image",
+              ),
+            })),
+          );
         } else {
           setError(data.message || "Failed to fetch projects");
         }
