@@ -16,23 +16,24 @@ function normalizeApiBaseUrl(url) {
 }
 
 /**
- * Resolve on every call (do not cache at module load) so Vercel / live hosts never keep a
- * build-time localhost URL in module-level constants.
+ * Resolve on every call. Vite bakes VITE_API_BASE_URL into the bundle; if that value is
+ * localhost (wrong env on CI), it must not win when the app runs on Vercel — so we check
+ * the browser hostname first.
  */
 function getResolvedBaseUrl() {
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host && host !== "localhost" && host !== "127.0.0.1") {
+      return normalizeApiBaseUrl(DEFAULT_API_BASE_URL_PROD);
+    }
+  }
+
   let resolved =
     import.meta.env.VITE_API_BASE_URL ||
     (import.meta.env.PROD ? DEFAULT_API_BASE_URL_PROD : DEFAULT_API_BASE_URL_DEV);
 
   if (import.meta.env.PROD && isLocalApiUrl(String(resolved))) {
     resolved = DEFAULT_API_BASE_URL_PROD;
-  }
-
-  if (typeof window !== "undefined") {
-    const host = window.location.hostname;
-    if (host && host !== "localhost" && host !== "127.0.0.1") {
-      resolved = DEFAULT_API_BASE_URL_PROD;
-    }
   }
 
   return normalizeApiBaseUrl(resolved);
