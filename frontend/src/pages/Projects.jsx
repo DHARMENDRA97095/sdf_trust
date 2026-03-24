@@ -1,8 +1,4 @@
 import { API_BASE_URL } from "../config";
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-export const PROJECTS_API = `${API_BASE_URL}/projects.php`;
-
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -12,6 +8,8 @@ import "leaflet/dist/leaflet.css";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+export const PROJECTS_API = `${API_BASE_URL}/projects.php`;
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
