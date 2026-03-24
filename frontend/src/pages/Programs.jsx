@@ -6,7 +6,7 @@ const Programs = () => {
   const location = useLocation();
   const [programsList, setProgramsList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (location.hash) {
@@ -20,37 +20,41 @@ const Programs = () => {
   }, [location]);
 
   useEffect(() => {
-    const fetchPrograms = async () => {
-      try {
-        const response = await apiFetch("programs.php");
-
-        if (!response.ok) {
+    apiFetch("programs.php")
+      .then((res) => {
+        if (!res.ok) {
           throw new Error("Failed to fetch programs");
         }
+        return res.json();
+      })
+      .then((data) => {
+        const programs = Array.isArray(data) ? data : [];
 
-        const data = await response.json();
+        const formattedPrograms = programs.map((program, index) => ({
+          ...program,
+          id: program.id || index,
+          program_id: program.program_id || program.slug || `program-${index}`,
+          title: program.title || "Untitled Program",
+          description: program.description || "No description available.",
+          slug: program.slug || "",
+          icon: program.icon || "📌",
+          beneficiaries: program.beneficiaries || "N/A",
+          regions: program.regions || "N/A",
+          image_url: makeImageUrl(
+            program.image_url,
+            "https://via.placeholder.com/800x500?text=No+Image"
+          ),
+        }));
 
-        if (data.status === "success") {
-          setProgramsList(
-            data.data.map((program) => ({
-              ...program,
-              image_url: makeImageUrl(
-                program.image_url,
-                "https://via.placeholder.com/800x500?text=No+Image",
-              ),
-            })),
-          );
-        } else {
-          throw new Error(data.message || "Error fetching programs");
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
+        setProgramsList(formattedPrograms);
+      })
+      .catch((err) => {
+        console.error("Error loading programs:", err);
+        setError(err.message || "Something went wrong while loading programs.");
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    };
-
-    fetchPrograms();
+      });
   }, []);
 
   if (loading) {
@@ -78,6 +82,7 @@ const Programs = () => {
     <div className="bg-bg-color min-h-screen pb-20">
       <section className="bg-secondary text-white py-20 bg-opacity-90 relative">
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000')] bg-cover bg-center"></div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
             Our Programmes
@@ -90,53 +95,69 @@ const Programs = () => {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {programsList.map((program, idx) => (
-            <div
-              key={program.id || idx}
-              id={program.program_id}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col scroll-mt-28"
-            >
-              <div className="h-48 overflow-hidden">
-                <img
-                  src={program.image_url}
-                  alt={program.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-
-              <div className="p-8 relative grow flex flex-col">
-                <div className="absolute -top-10 right-6 w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-xl border border-gray-50 hover:scale-110 transition-transform duration-300">
-                  {program.icon || "📌"}
+        {programsList.length === 0 ? (
+          <div className="text-center text-gray-500 text-lg">
+            No programs found.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {programsList.map((program, idx) => (
+              <div
+                key={program.id || idx}
+                id={program.program_id}
+                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col scroll-mt-28"
+              >
+                <div className="h-48 overflow-hidden">
+                  <img
+                    src={program.image_url}
+                    alt={program.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://via.placeholder.com/800x500?text=No+Image";
+                    }}
+                  />
                 </div>
 
-                <h3 className="text-2xl font-serif font-bold text-text-primary mb-4 mt-4 leading-tight">
-                  {program.title}
-                </h3>
+                <div className="p-8 relative grow flex flex-col">
+                  <div className="absolute -top-10 right-6 w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-xl border border-gray-50 hover:scale-110 transition-transform duration-300">
+                    {program.icon}
+                  </div>
 
-                <p className="text-gray-600 mb-6 grow">
-                  {program.description}
-                </p>
+                  <h3 className="text-2xl font-serif font-bold text-text-primary mb-4 mt-4 leading-tight">
+                    {program.title}
+                  </h3>
 
-                <div className="flex items-center gap-2 mt-auto pt-4 border-t border-gray-100 flex-wrap">
-                  <span className="bg-[#E9EFE1] text-primary text-xs font-bold px-3 py-1 rounded-full">
-                    {program.beneficiaries || "N/A"} Beneficiaries
-                  </span>
-                  <span className="bg-blue-50 text-accent text-xs font-bold px-3 py-1 rounded-full">
-                    {program.regions || "N/A"} Active
-                  </span>
+                  <p className="text-gray-600 mb-6 grow">
+                    {program.description}
+                  </p>
+
+                  <div className="flex items-center gap-2 mt-auto pt-4 border-t border-gray-100 flex-wrap">
+                    <span className="bg-[#E9EFE1] text-primary text-xs font-bold px-3 py-1 rounded-full">
+                      {program.beneficiaries} Beneficiaries
+                    </span>
+                    <span className="bg-blue-50 text-accent text-xs font-bold px-3 py-1 rounded-full">
+                      {program.regions} Active
+                    </span>
+                  </div>
+
+                  {program.slug ? (
+                    <Link
+                      to={`/programdetails/${program.slug}`}
+                      className="text-primary font-bold hover:text-secondary uppercase tracking-wider text-sm self-start transition-colors mt-6"
+                    >
+                      Explore Programme &rarr;
+                    </Link>
+                  ) : (
+                    <span className="text-gray-400 uppercase tracking-wider text-sm mt-6">
+                      Details unavailable
+                    </span>
+                  )}
                 </div>
-
-                <Link
-                  to={`/programdetails/${program.slug}`}
-                  className="text-primary font-bold hover:text-secondary uppercase tracking-wider text-sm self-start transition-colors mt-6"
-                >
-                  Explore Programme &rarr;
-                </Link>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
