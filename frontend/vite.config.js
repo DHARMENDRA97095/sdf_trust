@@ -9,13 +9,13 @@ export default defineConfig({
   server: {
     proxy: {
       '/admin': {
-        target: 'http://localhost/backend/admin',
+        target: 'http://localhost/sdftrust/backend/admin',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/admin/, ''),
       },
       // ADD THIS so images show up in your React frontend
       '/uploads': {
-        target: 'http://localhost/backend/admin/uploads',
+        target: 'http://localhost/sdftrust/backend/admin/uploads',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/uploads/, ''),
       },

@@ -22,7 +22,7 @@ const Contact = () => {
 
     try {
       // In production, point to actual PHP server
-      const response = await fetch('http://localhost/backend/api/contact.php', {
+      const response = await fetch('http://localhost/sdftrust/backend/api/contact.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

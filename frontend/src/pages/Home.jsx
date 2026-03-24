@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import Herosection from "../components/Herosection";
 import Testimonials from "./Testimonials";
 
-const PROGRAMS_API_URL = "http://localhost/backend/api/programs.php";
-const SUBSCRIBE_API_URL = "http://localhost/backend/api/subscribe.php";
-const ADMIN_BASE_URL = "http://localhost/backend/admin/";
+const PROGRAMS_API_URL = "http://localhost/sdftrust/backend/api/programs.php";
+const SUBSCRIBE_API_URL = "http://localhost/sdftrust/backend/api/subscribe.php";
+const ADMIN_BASE_URL = "http://localhost/sdftrust/backend/admin/";
 
 const makeImageUrl = (path) => {
   if (!path) return "https://via.placeholder.com/800x500?text=No+Image";

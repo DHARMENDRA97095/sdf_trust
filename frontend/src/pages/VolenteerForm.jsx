@@ -27,7 +27,7 @@ export default function VolunteerForm() {
     setStatus({ type: '', message: '' });
 
     try {
-      const response = await fetch("http://localhost/backend/api/volunteer.php", {
+      const response = await fetch("http://localhost/sdftrust/backend/api/volunteer.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

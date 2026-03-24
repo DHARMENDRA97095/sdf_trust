@@ -21,7 +21,7 @@ const Programs = () => {
   useEffect(() => {
     const fetchPrograms = async () => {
       try {
-        const response = await fetch("http://localhost/backend/api/programs.php");
+        const response = await fetch("http://localhost/sdftrust/backend/api/programs.php");
 
         if (!response.ok) {
           throw new Error("Failed to fetch programs");

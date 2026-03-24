@@ -75,7 +75,7 @@ function Testimonials() { // Removed props, we fetch inside now
 
   // 1. Fetch data from PHP
   useEffect(() => {
-    fetch('http://localhost/backend/api/testimonial.php')
+    fetch('http://localhost/sdftrust/backend/api/testimonial.php')
       .then(res => res.json())
       .then(data => setTestimonials(data))
       .catch(err => console.error("Error loading stories:", err));
