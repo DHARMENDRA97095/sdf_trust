@@ -6,9 +6,14 @@ function isLocalApiUrl(url) {
   return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\b/i.test(url);
 }
 
-/** Non-localhost http:// → https:// (mixed content + production API often set as http by mistake). */
+/**
+ * Non-localhost http:// → https:// (mixed content).
+ * Env / CI often sets VITE_API_BASE_URL=http://hrntechsolutions.com/... — force that host to https explicitly.
+ */
 function normalizeApiBaseUrl(url) {
-  let base = String(url).replace(/\/+$/, "");
+  let base = String(url).trim().replace(/\/+$/, "");
+  base = base.replace(/^http:\/\/www\.hrntechsolutions\.com/i, "https://www.hrntechsolutions.com");
+  base = base.replace(/^http:\/\/hrntechsolutions\.com/i, "https://hrntechsolutions.com");
   if (base.startsWith("http://") && !isLocalApiUrl(base)) {
     base = "https://" + base.slice("http://".length);
   }
@@ -49,7 +54,8 @@ export function getAdminBaseUrl() {
 
 export function apiUrl(endpoint = "") {
   const base = getResolvedBaseUrl().replace(/\/+$/, "");
-  return `${base}/${String(endpoint).replace(/^\/+/, "")}`;
+  const full = `${base}/${String(endpoint).replace(/^\/+/, "")}`;
+  return normalizeApiBaseUrl(full);
 }
 
 export function adminUrl(path = "") {
